@@ -1,0 +1,47 @@
+# Overview
+
+FitPlan is a full-stack fitness and nutrition tracking application built with modern web technologies. The app serves as an AI-powered fitness planner that helps users track workouts, log food intake, monitor progress, and achieve their health goals. It features a sleek dark theme with gradient designs and comprehensive user management capabilities.
+
+# User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+# System Architecture
+
+## Frontend Architecture
+- **Framework**: React 18 with TypeScript for type safety and modern development patterns
+- **Routing**: Wouter for lightweight client-side routing
+- **State Management**: TanStack Query (React Query) for server state management and caching
+- **UI Components**: Radix UI primitives with shadcn/ui component library for consistent, accessible UI
+- **Styling**: Tailwind CSS with custom CSS variables for theming and responsive design
+- **Form Handling**: React Hook Form with Zod validation for type-safe form management
+- **Build Tool**: Vite for fast development and optimized production builds
+
+## Backend Architecture
+- **Runtime**: Node.js with Express.js framework for RESTful API endpoints
+- **Language**: TypeScript for end-to-end type safety
+- **Database ORM**: Drizzle ORM for type-safe database operations and migrations
+- **Storage Pattern**: Repository pattern with in-memory storage implementation (MemStorage) and interface for easy database integration
+- **API Structure**: RESTful endpoints for users, workouts, and food logs with proper HTTP status codes and error handling
+
+## Data Storage Solutions
+- **Database**: PostgreSQL configured via Drizzle with connection pooling using Neon serverless adapter
+- **Schema Management**: Drizzle migrations with schema definitions in shared directory
+- **Session Storage**: PostgreSQL-based session storage using connect-pg-simple
+- **Data Models**: Three main entities - users, workouts, and food logs with proper foreign key relationships
+
+## Authentication and Authorization
+- **Session Management**: Express sessions with PostgreSQL backing store
+- **User Management**: User registration, profile updates, and authentication endpoints
+- **Data Access**: User-scoped data access patterns ensuring users can only access their own data
+- **Security**: Input validation using Zod schemas and proper error handling
+
+## External Dependencies
+- **Database Hosting**: Neon Database (serverless PostgreSQL)
+- **UI Components**: Radix UI ecosystem for accessible component primitives
+- **Icons**: Lucide React for consistent iconography
+- **Development**: Replit-specific plugins for development environment integration
+- **Styling**: PostCSS with Autoprefixer for CSS processing
+- **Image Assets**: Unsplash for fitness-related background imagery
+
+The application follows a monorepo structure with shared TypeScript definitions, enabling type safety across the full stack. The architecture supports easy scaling and maintenance with clear separation of concerns between frontend presentation, backend business logic, and data persistence layers.
