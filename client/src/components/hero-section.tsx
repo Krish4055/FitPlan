@@ -63,22 +63,6 @@ export default function HeroSection() {
             <span>Start Your Journey</span>
           </Button>
         </div>
-        
-        {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          <div className="bg-dark-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
-            <div className="text-4xl font-black text-primary-blue mb-2">50K+</div>
-            <div className="text-gray-400">Active Users</div>
-          </div>
-          <div className="bg-dark-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
-            <div className="text-4xl font-black text-primary-green mb-2">95%</div>
-            <div className="text-gray-400">Success Rate</div>
-          </div>
-          <div className="bg-dark-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
-            <div className="text-4xl font-black text-accent-orange mb-2">24/7</div>
-            <div className="text-gray-400">AI Support</div>
-          </div>
-        </div>
       </div>
     </section>
   );
