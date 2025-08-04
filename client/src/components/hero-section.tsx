@@ -2,6 +2,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Bolt } from "lucide-react";
 import { useState, useEffect } from "react";
+import heroImage from "@assets/image_1754317580244.png";
 
 const motivationalQuotes = [
   "The only bad workout is the one that didn't happen.",
@@ -30,9 +31,9 @@ export default function HeroSection() {
       {/* Background with fitness imagery */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--dark-bg)] via-gray-900 to-[var(--dark-bg)]">
         <div 
-          className="absolute inset-0 opacity-30 bg-cover bg-center"
+          className="absolute inset-0 opacity-40 bg-cover bg-center"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080')"
+            backgroundImage: `url(${heroImage})`
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--dark-bg)]/90 via-transparent to-[var(--dark-bg)]/90" />
