@@ -44,6 +44,14 @@ export const foodLogs = pgTable("food_logs", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const weightEntries = pgTable("weight_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  weight: decimal("weight", { precision: 5, scale: 2 }).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -59,9 +67,16 @@ export const insertFoodLogSchema = createInsertSchema(foodLogs).omit({
   createdAt: true,
 });
 
+export const insertWeightEntrySchema = createInsertSchema(weightEntries).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertWorkout = z.infer<typeof insertWorkoutSchema>;
 export type Workout = typeof workouts.$inferSelect;
 export type InsertFoodLog = z.infer<typeof insertFoodLogSchema>;
 export type FoodLog = typeof foodLogs.$inferSelect;
+export type InsertWeightEntry = z.infer<typeof insertWeightEntrySchema>;
+export type WeightEntry = typeof weightEntries.$inferSelect;

@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertWorkoutSchema, insertFoodLogSchema } from "@shared/schema";
+import { insertUserSchema, insertWorkoutSchema, insertFoodLogSchema, insertWeightEntrySchema } from "@shared/schema";
 import { hashPassword, authenticateUser, requireAuth } from "./auth";
 import { z } from "zod";
 
@@ -174,6 +174,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Food log not found" });
       }
       res.json({ message: "Food log deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Weight entry routes
+  app.get("/api/weight-entries", requireAuth, async (req, res) => {
+    try {
+      const weightEntries = await storage.getWeightEntries(req.userId!);
+      res.json(weightEntries);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/weight-entries", requireAuth, async (req, res) => {
+    try {
+      const weightEntryData = insertWeightEntrySchema.omit({ userId: true }).parse(req.body);
+      const weightEntry = await storage.createWeightEntry({ ...weightEntryData, userId: req.userId! });
+      res.json(weightEntry);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid weight entry data" });
+    }
+  });
+
+  app.delete("/api/weight-entries/:id", requireAuth, async (req, res) => {
+    try {
+      // First get the weight entries to verify ownership
+      const weightEntries = await storage.getWeightEntries(req.userId!);
+      const weightEntry = weightEntries.find(entry => entry.id === req.params.id);
+      
+      if (!weightEntry) {
+        return res.status(404).json({ message: "Weight entry not found" });
+      }
+
+      const deleted = await storage.deleteWeightEntry(req.params.id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Weight entry not found" });
+      }
+      res.json({ message: "Weight entry deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }

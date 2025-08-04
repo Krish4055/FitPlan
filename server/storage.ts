@@ -1,4 +1,4 @@
-import { users, workouts, foodLogs, type User, type InsertUser, type Workout, type InsertWorkout, type FoodLog, type InsertFoodLog } from "@shared/schema";
+import { users, workouts, foodLogs, weightEntries, type User, type InsertUser, type Workout, type InsertWorkout, type FoodLog, type InsertFoodLog, type WeightEntry, type InsertWeightEntry } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lt, desc } from "drizzle-orm";
 
@@ -16,11 +16,16 @@ export interface IStorage {
   createWorkout(workout: InsertWorkout): Promise<Workout>;
   deleteWorkout(id: string): Promise<boolean>;
 
-  // Food log operations
+  // Food log operations  
   getFoodLogs(userId: string): Promise<FoodLog[]>;
   getFoodLogsByDate(userId: string, date: string): Promise<FoodLog[]>;
   createFoodLog(foodLog: InsertFoodLog): Promise<FoodLog>;
   deleteFoodLog(id: string): Promise<boolean>;
+
+  // Weight entry operations
+  getWeightEntries(userId: string): Promise<WeightEntry[]>;
+  createWeightEntry(weightEntry: InsertWeightEntry): Promise<WeightEntry>;
+  deleteWeightEntry(id: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -117,6 +122,27 @@ export class DatabaseStorage implements IStorage {
 
   async deleteFoodLog(id: string): Promise<boolean> {
     const result = await db.delete(foodLogs).where(eq(foodLogs.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
+  }
+
+  async getWeightEntries(userId: string): Promise<WeightEntry[]> {
+    return await db
+      .select()
+      .from(weightEntries)
+      .where(eq(weightEntries.userId, userId))
+      .orderBy(desc(weightEntries.createdAt));
+  }
+
+  async createWeightEntry(insertWeightEntry: InsertWeightEntry): Promise<WeightEntry> {
+    const [weightEntry] = await db
+      .insert(weightEntries)
+      .values(insertWeightEntry)
+      .returning();
+    return weightEntry;
+  }
+
+  async deleteWeightEntry(id: string): Promise<boolean> {
+    const result = await db.delete(weightEntries).where(eq(weightEntries.id, id));
     return result.rowCount !== null && result.rowCount > 0;
   }
 }
