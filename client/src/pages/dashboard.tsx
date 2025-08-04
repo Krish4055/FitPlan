@@ -46,17 +46,12 @@ const progressData = [
 ];
 
 export default function Dashboard() {
-  // For demo purposes, using mock user ID
-  const mockUserId = "demo-user";
-
   const { data: workouts, isLoading: workoutsLoading } = useQuery({
-    queryKey: ["/api/workouts", mockUserId],
-    enabled: false // Disabled for demo since no actual user
+    queryKey: ["/api/workouts"],
   });
 
   const { data: foodLogs, isLoading: foodLoading } = useQuery({
-    queryKey: ["/api/food-logs", mockUserId],
-    enabled: false // Disabled for demo since no actual user
+    queryKey: ["/api/food-logs"],
   });
 
   return (

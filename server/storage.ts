@@ -1,5 +1,6 @@
-import { type User, type InsertUser, type Workout, type InsertWorkout, type FoodLog, type InsertFoodLog } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { users, workouts, foodLogs, type User, type InsertUser, type Workout, type InsertWorkout, type FoodLog, type InsertFoodLog } from "@shared/schema";
+import { db } from "./db";
+import { eq, and, gte, lt, desc } from "drizzle-orm";
 
 export interface IStorage {
   // User operations
@@ -22,82 +23,71 @@ export interface IStorage {
   deleteFoodLog(id: string): Promise<boolean>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private workouts: Map<string, Workout>;
-  private foodLogs: Map<string, FoodLog>;
-
-  constructor() {
-    this.users = new Map();
-    this.workouts = new Map();
-    this.foodLogs = new Map();
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.email === email,
-    );
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { 
-      ...insertUser, 
-      id,
-      createdAt: new Date()
-    };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async updateUser(id: string, updates: Partial<InsertUser>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-
-    const updatedUser = { ...user, ...updates };
-    this.users.set(id, updatedUser);
-    return updatedUser;
+    const [user] = await db
+      .update(users)
+      .set(updates)
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
   }
 
   async getWorkouts(userId: string): Promise<Workout[]> {
-    return Array.from(this.workouts.values())
-      .filter(workout => workout.userId === userId)
-      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+    return await db
+      .select()
+      .from(workouts)
+      .where(eq(workouts.userId, userId))
+      .orderBy(desc(workouts.createdAt));
   }
 
   async getWorkout(id: string): Promise<Workout | undefined> {
-    return this.workouts.get(id);
+    const [workout] = await db.select().from(workouts).where(eq(workouts.id, id));
+    return workout || undefined;
   }
 
   async createWorkout(insertWorkout: InsertWorkout): Promise<Workout> {
-    const id = randomUUID();
-    const workout: Workout = {
-      ...insertWorkout,
-      id,
-      createdAt: new Date()
-    };
-    this.workouts.set(id, workout);
+    const [workout] = await db
+      .insert(workouts)
+      .values(insertWorkout)
+      .returning();
     return workout;
   }
 
   async deleteWorkout(id: string): Promise<boolean> {
-    return this.workouts.delete(id);
+    const result = await db.delete(workouts).where(eq(workouts.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
   }
 
   async getFoodLogs(userId: string): Promise<FoodLog[]> {
-    return Array.from(this.foodLogs.values())
-      .filter(log => log.userId === userId)
-      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+    return await db
+      .select()
+      .from(foodLogs)
+      .where(eq(foodLogs.userId, userId))
+      .orderBy(desc(foodLogs.createdAt));
   }
 
   async getFoodLogsByDate(userId: string, date: string): Promise<FoodLog[]> {
@@ -105,29 +95,30 @@ export class MemStorage implements IStorage {
     const nextDate = new Date(targetDate);
     nextDate.setDate(nextDate.getDate() + 1);
 
-    return Array.from(this.foodLogs.values())
-      .filter(log => 
-        log.userId === userId && 
-        log.createdAt && 
-        new Date(log.createdAt) >= targetDate && 
-        new Date(log.createdAt) < nextDate
+    return await db
+      .select()
+      .from(foodLogs)
+      .where(
+        and(
+          eq(foodLogs.userId, userId),
+          gte(foodLogs.createdAt, targetDate),
+          lt(foodLogs.createdAt, nextDate)
+        )
       );
   }
 
   async createFoodLog(insertFoodLog: InsertFoodLog): Promise<FoodLog> {
-    const id = randomUUID();
-    const foodLog: FoodLog = {
-      ...insertFoodLog,
-      id,
-      createdAt: new Date()
-    };
-    this.foodLogs.set(id, foodLog);
+    const [foodLog] = await db
+      .insert(foodLogs)
+      .values(insertFoodLog)
+      .returning();
     return foodLog;
   }
 
   async deleteFoodLog(id: string): Promise<boolean> {
-    return this.foodLogs.delete(id);
+    const result = await db.delete(foodLogs).where(eq(foodLogs.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

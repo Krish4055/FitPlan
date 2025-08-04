@@ -26,9 +26,8 @@ export default function LogWorkout() {
   const queryClient = useQueryClient();
   
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema.omit({ userId: true })),
     defaultValues: {
-      userId: "demo-user", // Mock user ID for demo
       workoutType: "",
       duration: 0,
       caloriesBurned: 0,

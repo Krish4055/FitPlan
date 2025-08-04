@@ -1,9 +1,14 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Dumbbell } from "lucide-react";
+import { Dumbbell, LogOut, User } from "lucide-react";
+import { useAuth, useLogout } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Navbar() {
   const [location] = useLocation();
+  const { user } = useAuth();
+  const logout = useLogout();
+  const { toast } = useToast();
 
   const navItems = [
     { path: "/dashboard", label: "Dashboard" },
@@ -11,6 +16,22 @@ export default function Navbar() {
     { path: "/log-workout", label: "Log Workout" },
     { path: "/settings", label: "Settings" },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logout.mutateAsync();
+      toast({
+        title: "Logged out successfully",
+        description: "See you next time!",
+      });
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[var(--dark-bg)]/80 backdrop-blur-md border-b border-gray-800">
@@ -39,12 +60,25 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/signin" className="text-gray-300 hover:text-white transition-colors">
-              Sign In
-            </Link>
-            <Button className="bg-gradient-green-blue px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
-              Get Started
-            </Button>
+            
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 text-gray-300">
+                <User className="w-4 h-4" />
+                <span className="text-sm">
+                  {user?.fullName || user?.username || 'User'}
+                </span>
+              </div>
+              <Button 
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="border-gray-600 text-gray-300 hover:text-white hover:border-gray-500"
+                disabled={logout.isPending}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                {logout.isPending ? 'Logging out...' : 'Logout'}
+              </Button>
+            </div>
           </div>
           
           {/* Mobile menu button */}
