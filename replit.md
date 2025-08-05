@@ -61,6 +61,8 @@ The application follows a monorepo structure with shared TypeScript definitions,
 - ✅ Weight progress visualization using Recharts library
 - ✅ Add/edit weight entries with notes functionality
 - ✅ Real-time chart updates reflecting user weight changes
+- ✅ **Guest sign-in option for exploring without account creation**
+- ✅ Guest users get temporary accounts with full app access
 - ✅ End-to-end testing confirms all systems working correctly
 
-**Deployment Status**: The application is now fully ready for deployment with complete backend functionality, database integration, user authentication system, and interactive weight tracking with progress visualization.
+**Deployment Status**: The application is now fully ready for deployment with complete backend functionality, database integration, user authentication system, guest access option, and interactive weight tracking with progress visualization.

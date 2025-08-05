@@ -7,9 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useLogin, useRegister } from '@/hooks/useAuth';
+import { useLogin, useRegister, useGuestLogin } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, UserCheck } from 'lucide-react';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -32,6 +32,7 @@ export default function AuthPage() {
   
   const loginMutation = useLogin();
   const registerMutation = useRegister();
+  const guestLoginMutation = useGuestLogin();
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -78,6 +79,22 @@ export default function AuthPage() {
       toast({
         title: 'Registration Failed',
         description: error instanceof Error ? error.message : 'Registration failed',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const onGuestLogin = async () => {
+    try {
+      await guestLoginMutation.mutateAsync();
+      toast({
+        title: 'Welcome Guest!',
+        description: 'You can now explore FitPlan. Your data will be temporary.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Guest Login Failed',
+        description: 'Please try again.',
         variant: 'destructive',
       });
     }
@@ -153,6 +170,31 @@ export default function AuthPage() {
                     )}
                   </Button>
                 </form>
+                
+                {/* Guest Sign In Option */}
+                <div className="mt-4 pt-4 border-t border-gray-600">
+                  <Button
+                    onClick={onGuestLogin}
+                    variant="outline"
+                    className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                    disabled={guestLoginMutation.isPending}
+                  >
+                    {guestLoginMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing In...
+                      </>
+                    ) : (
+                      <>
+                        <UserCheck className="mr-2 h-4 w-4" />
+                        Continue as Guest
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-gray-500 text-xs text-center mt-2">
+                    Explore FitPlan without creating an account. Your data will be temporary.
+                  </p>
+                </div>
               </CardContent>
             </TabsContent>
 
@@ -229,6 +271,31 @@ export default function AuthPage() {
                     )}
                   </Button>
                 </form>
+                
+                {/* Guest Sign In Option */}
+                <div className="mt-4 pt-4 border-t border-gray-600">
+                  <Button
+                    onClick={onGuestLogin}
+                    variant="outline"
+                    className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                    disabled={guestLoginMutation.isPending}
+                  >
+                    {guestLoginMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing In...
+                      </>
+                    ) : (
+                      <>
+                        <UserCheck className="mr-2 h-4 w-4" />
+                        Continue as Guest
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-gray-500 text-xs text-center mt-2">
+                    Explore FitPlan without creating an account. Your data will be temporary.
+                  </p>
+                </div>
               </CardContent>
             </TabsContent>
           </Tabs>

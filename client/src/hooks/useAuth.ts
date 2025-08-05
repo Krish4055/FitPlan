@@ -50,6 +50,20 @@ export function useRegister() {
   });
 }
 
+export function useGuestLogin() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/auth/guest');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+    },
+  });
+}
+
 export function useLogout() {
   const queryClient = useQueryClient();
   

@@ -53,6 +53,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/auth/guest", async (req, res) => {
+    try {
+      // Create or get guest user
+      const guestUsername = `guest_${Date.now()}`;
+      const guestUser = {
+        username: guestUsername,
+        email: `${guestUsername}@guest.com`,
+        password: "guest123", // Not used for guest
+        fullName: "Guest User"
+      };
+
+      const hashedPassword = await hashPassword(guestUser.password);
+      const user = await storage.createUser({ ...guestUser, password: hashedPassword });
+      
+      // Set session
+      req.session.userId = user.id;
+      
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Guest login failed" });
+    }
+  });
+
   app.post("/api/auth/logout", (req, res) => {
     req.session.destroy((err) => {
       if (err) {
