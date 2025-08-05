@@ -1,55 +1,55 @@
 import { sql } from "drizzle-orm";
-import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import { pgTable, text, varchar, integer, decimal, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = sqliteTable("users", {
-  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   fullName: text("full_name"),
   age: integer("age"),
   gender: text("gender"),
-  currentWeight: real("current_weight"),
-  targetWeight: real("target_weight"),
+  currentWeight: decimal("current_weight", { precision: 5, scale: 2 }),
+  targetWeight: decimal("target_weight", { precision: 5, scale: 2 }),
   primaryGoal: text("primary_goal"),
   activityLevel: text("activity_level"),
   weeklyWorkoutGoal: text("weekly_workout_goal"),
-  createdAt: integer("created_at", { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const workouts = sqliteTable("workouts", {
-  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
-  userId: text("user_id").notNull().references(() => users.id),
+export const workouts = pgTable("workouts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
   workoutType: text("workout_type").notNull(),
   duration: integer("duration").notNull(), // minutes
   caloriesBurned: integer("calories_burned"),
   intensity: text("intensity"),
   exerciseDetails: text("exercise_details"),
   feeling: text("feeling"),
-  createdAt: integer("created_at", { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const foodLogs = sqliteTable("food_logs", {
-  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
-  userId: text("user_id").notNull().references(() => users.id),
+export const foodLogs = pgTable("food_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
   foodName: text("food_name").notNull(),
   servingSize: text("serving_size"),
   calories: integer("calories").notNull(),
-  protein: real("protein"),
-  carbs: real("carbs"),
-  fats: real("fats"),
+  protein: decimal("protein", { precision: 5, scale: 2 }),
+  carbs: decimal("carbs", { precision: 5, scale: 2 }),
+  fats: decimal("fats", { precision: 5, scale: 2 }),
   mealType: text("meal_type").notNull(),
-  createdAt: integer("created_at", { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const weightEntries = sqliteTable("weight_entries", {
-  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
-  userId: text("user_id").notNull().references(() => users.id),
-  weight: real("weight").notNull(),
+export const weightEntries = pgTable("weight_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  weight: decimal("weight", { precision: 5, scale: 2 }).notNull(),
   notes: text("notes"),
-  createdAt: integer("created_at", { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).omit({

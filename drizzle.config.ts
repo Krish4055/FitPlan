@@ -1,10 +1,14 @@
 import { defineConfig } from "drizzle-kit";
+import * as dotenv from "dotenv";
+
+// ✅ Load environment variables from .env file
+dotenv.config();
 
 export default defineConfig({
   out: "./migrations",
   schema: "./shared/schema.ts",
-  dialect: "sqlite",
+  dialect: "postgresql",
   dbCredentials: {
-    url: "fitplan.db",
+    url: process.env.DATABASE_URL || "sqlite:fitplan.db",
   },
 });
