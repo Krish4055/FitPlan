@@ -6,11 +6,18 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Please set up your Supabase database connection.",
-  );
-}
+// Temporary fallback for development
+const getDatabaseUrl = () => {
+  if (process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
+  
+  // Fallback for development - you can replace this with your Supabase URL
+  console.log("⚠️  No DATABASE_URL found. Using fallback connection.");
+  return "postgresql://postgres:ganjinsdqqqoxtwtwlwm@db.ganjinsdqqqoxtwtwlwm.supabase.co:5432/postgres";
+};
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const connectionString = getDatabaseUrl();
+
+export const pool = new Pool({ connectionString });
 export const db = drizzle({ client: pool, schema });
