@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPlan - Transform Your Life</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#121212',
+                        'dark-card': '#1E1E1E',
+                        'primary-blue': '#3B82F6',
+                        'primary-green': '#10B981',
+                        'accent-orange': '#F97316',
+                        'accent-coral': '#EF4444'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-dark-bg text-white font-inter">
+    <!-- @COMPONENT: Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark-bg/80 backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-primary-blue to-primary-green rounded-xl flex items-center justify-center">
+                        <i class="fas fa-dumbbell text-white text-lg"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white">FitPlan</span>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#dashboard" class="text-gray-300 hover:text-white transition-colors" data-nav="dashboard">Dashboard</a>
+                    <a href="#log-food" class="text-gray-300 hover:text-white transition-colors" data-nav="log-food">Log Food</a>
+                    <a href="#log-workout" class="text-gray-300 hover:text-white transition-colors" data-nav="log-workout">Log Workout</a>
+                    <a href="#settings" class="text-gray-300 hover:text-white transition-colors" data-nav="settings">Settings</a>
+                    <a href="#signin" class="text-gray-300 hover:text-white transition-colors">Sign In</a>
+                    <button class="bg-gradient-to-r from-primary-green to-blue-500 px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
+                        Get Started
+                    </button>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button class="text-gray-300 hover:text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navbar -->
+
+    <!-- @COMPONENT: HeroSection -->
+    <section id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
+        <!-- Background with fitness imagery -->
+        <!-- A dynamic fitness scene with a silhouette of a person running against a vibrant gradient background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-dark-bg via-gray-900 to-dark-bg">
+            <div class="absolute inset-0" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080'); background-size: cover; background-position: center; opacity: 0.3;"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-dark-bg/90 via-transparent to-dark-bg/90"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <!-- Hero Content -->
+            <div class="mb-8">
+                <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">
+                    <span class="bg-gradient-to-r from-blue-400 via-primary-green to-green-400 bg-clip-text text-transparent">
+                        TRANSFORM
+                    </span>
+                    <br>
+                    <span class="text-white">YOUR LIFE</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto mb-12 leading-relaxed">
+                    The ultimate AI-powered fitness & nutrition planner that adapts to your lifestyle. 
+                    <span class="text-primary-green font-semibold">Track, Plan, Achieve.</span>
+                </p>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+                <button class="bg-gradient-to-r from-primary-blue to-primary-green px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center space-x-3" data-event="click:startJourney">
+                    <i class="fas fa-bolt"></i>
+                    <span>Start Your Journey</span>
+                </button>
+                <button class="border border-gray-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-all duration-300 flex items-center space-x-3" data-event="click:watchDemo">
+                    <i class="fas fa-play"></i>
+                    <span>Watch Demo</span>
+                </button>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="bg-dark-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+                    <div class="text-4xl font-black text-primary-blue mb-2">50K+</div>
+                    <div class="text-gray-400">Active Users</div>
+                </div>
+                <div class="bg-dark-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+                    <div class="text-4xl font-black text-primary-green mb-2">95%</div>
+                    <div class="text-gray-400">Success Rate</div>
+                </div>
+                <div class="bg-dark-card/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+                    <div class="text-4xl font-black text-accent-orange mb-2">24/7</div>
+                    <div class="text-gray-400">AI Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: WorkoutCategories -->
+    <section id="workout-categories" class="py-20 bg-dark-bg hidden" data-page="workout-categories">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-6">
+                    <span class="text-primary-blue">WORKOUT</span> 
+                    <span class="text-white">CATEGORIES</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Choose from our expertly designed workout categories, each tailored to specific fitness goals
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- @MAP: workoutCategories.map(category => ( -->
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-primary-blue rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-dumbbell text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-primary-blue mb-4" data-mock="true">Strength Training</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">Build muscle and increase power</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-blue rounded-full mr-3"></div>
+                            Push-ups
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-blue rounded-full mr-3"></div>
+                            Squats
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-blue rounded-full mr-3"></div>
+                            Deadlifts
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-blue rounded-full mr-3"></div>
+                            Pull-ups
+                        </li>
+                    </ul>
+                    <button class="w-full bg-transparent border border-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center space-x-2" data-event="click:startWorkout">
+                        <span>Start Workout</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-primary-green rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-bolt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-primary-green mb-4" data-mock="true">HIIT Workouts</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">High-intensity interval training</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-green rounded-full mr-3"></div>
+                            Burpees
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-green rounded-full mr-3"></div>
+                            Mountain Climbers
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-green rounded-full mr-3"></div>
+                            Jump Squats
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-green rounded-full mr-3"></div>
+                            Sprints
+                        </li>
+                    </ul>
+                    <button class="w-full bg-transparent border border-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center space-x-2" data-event="click:startWorkout">
+                        <span>Start Workout</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-accent-orange rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-heart text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-accent-orange mb-4" data-mock="true">Endurance</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">Boost cardiovascular health</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-orange rounded-full mr-3"></div>
+                            Running
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-orange rounded-full mr-3"></div>
+                            Cycling
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-orange rounded-full mr-3"></div>
+                            Swimming
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-orange rounded-full mr-3"></div>
+                            Rowing
+                        </li>
+                    </ul>
+                    <button class="w-full bg-transparent border border-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center space-x-2" data-event="click:startWorkout">
+                        <span>Start Workout</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-accent-coral rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-leaf text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-accent-coral mb-4" data-mock="true">Flexibility</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">Improve mobility and recovery</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-coral rounded-full mr-3"></div>
+                            Yoga
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-coral rounded-full mr-3"></div>
+                            Stretching
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-coral rounded-full mr-3"></div>
+                            Pilates
+                        </li>
+                        <li class="flex items-center text-gray-300" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-coral rounded-full mr-3"></div>
+                            Foam Rolling
+                        </li>
+                    </ul>
+                    <button class="w-full bg-transparent border border-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center space-x-2" data-event="click:startWorkout">
+                        <span>Start Workout</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: WorkoutCategories -->
+
+    <!-- @COMPONENT: NutritionMastery -->
+    <section id="nutrition-mastery" class="py-20 bg-dark-bg hidden" data-page="nutrition-mastery">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-6 text-white">NUTRITION MASTERY</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Fuel your body with precision. Our AI-powered nutrition system optimizes every meal for your goals
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="w-16 h-16 bg-primary-green rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-utensils text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-primary-green mb-4" data-mock="true">Meal Planning</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">AI-generated meal plans tailored to your goals</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-green rounded-full mr-3"></div>
+                            2000+ Recipes
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-green rounded-full mr-3"></div>
+                            Custom Macros
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-green rounded-full mr-3"></div>
+                            Prep Time &lt; 30min
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="w-16 h-16 bg-primary-blue rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-bar text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-primary-blue mb-4" data-mock="true">Nutrition Tracking</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">Track calories, macros, and micronutrients</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-blue rounded-full mr-3"></div>
+                            Barcode Scanner
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-blue rounded-full mr-3"></div>
+                            Smart Suggestions
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-primary-blue rounded-full mr-3"></div>
+                            Progress Analytics
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="w-16 h-16 bg-accent-orange rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-apple-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-accent-orange mb-4" data-mock="true">Healthy Recipes</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">Delicious recipes for every dietary need</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-orange rounded-full mr-3"></div>
+                            Vegan Options
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-orange rounded-full mr-3"></div>
+                            Keto Friendly
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-orange rounded-full mr-3"></div>
+                            Gluten Free
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="w-16 h-16 bg-accent-coral rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-pills text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-accent-coral mb-4" data-mock="true">Supplement Guide</h3>
+                    <p class="text-gray-400 mb-6" data-mock="true">Personalized supplement recommendations</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-coral rounded-full mr-3"></div>
+                            Science-Based
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-coral rounded-full mr-3"></div>
+                            Goal Oriented
+                        </li>
+                        <li class="flex items-center" data-mock="true">
+                            <div class="w-2 h-2 bg-accent-coral rounded-full mr-3"></div>
+                            Timing Optimized
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: NutritionMastery -->
+
+    <!-- @COMPONENT: Dashboard -->
+    <section id="dashboard" class="py-20 bg-dark-bg hidden" data-page="dashboard">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Progress Tracking Header -->
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-6">
+                    <span class="text-primary-blue">TRACK YOUR</span> 
+                    <span class="text-white">PROGRESS</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Visualize your fitness journey with real-time analytics and intelligent insights
+                </p>
+            </div>
+            
+            <!-- Progress Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-blue rounded-xl flex items-center justify-center">
+                            <i class="fas fa-chart-line text-white text-xl"></i>
+                        </div>
+                        <div class="text-primary-blue">
+                            <i class="fas fa-arrow-up text-sm"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-400 text-sm font-medium mb-2" data-mock="true">Weight Progress</h3>
+                    <div class="text-3xl font-black text-primary-blue mb-1" data-bind="user.weightProgress" data-mock="true">-12.5</div>
+                    <div class="text-sm text-gray-500" data-mock="true">lbs</div>
+                    <div class="text-xs text-gray-500 mt-2" data-mock="true">+5.2% this week</div>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-primary-green rounded-xl flex items-center justify-center">
+                            <i class="fas fa-dumbbell text-white text-xl"></i>
+                        </div>
+                        <div class="text-primary-green">
+                            <i class="fas fa-arrow-up text-sm"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-400 text-sm font-medium mb-2" data-mock="true">Workouts Completed</h3>
+                    <div class="text-3xl font-black text-primary-green mb-1" data-bind="user.workoutsCompleted" data-mock="true">28</div>
+                    <div class="text-sm text-gray-500" data-mock="true">this month</div>
+                    <div class="text-xs text-gray-500 mt-2" data-mock="true">7 day streak!</div>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-accent-orange rounded-xl flex items-center justify-center">
+                            <i class="fas fa-fire text-white text-xl"></i>
+                        </div>
+                        <div class="text-accent-orange">
+                            <i class="fas fa-arrow-up text-sm"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-400 text-sm font-medium mb-2" data-mock="true">Calories Burned</h3>
+                    <div class="text-3xl font-black text-accent-orange mb-1" data-bind="user.caloriesBurned" data-mock="true">2,847</div>
+                    <div class="text-sm text-gray-500" data-mock="true">today</div>
+                    <div class="text-xs text-gray-500 mt-2" data-mock="true">Goal: 2,500</div>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8 hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-accent-coral rounded-xl flex items-center justify-center">
+                            <i class="fas fa-target text-white text-xl"></i>
+                        </div>
+                        <div class="text-accent-coral">
+                            <i class="fas fa-arrow-up text-sm"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-gray-400 text-sm font-medium mb-2" data-mock="true">Goals Achieved</h3>
+                    <div class="text-3xl font-black text-accent-coral mb-1" data-bind="user.goalsAchieved" data-mock="true">89</div>
+                    <div class="text-sm text-gray-500" data-mock="true">%</div>
+                    <div class="text-xs text-gray-500 mt-2" data-mock="true">This month</div>
+                </div>
+            </div>
+            
+            <!-- Chart Placeholder -->
+            <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-white mb-6">Weight Progress Chart</h3>
+                <div class="h-64 bg-gray-800 rounded-xl flex items-center justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-chart-line text-4xl text-gray-600 mb-4"></i>
+                        <p class="text-gray-500">Chart.js integration placeholder</p>
+                        <p class="text-sm text-gray-600 mt-2"><!-- TODO: Implement Chart.js for weight tracking visualization --></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Dashboard -->
+
+    <!-- @COMPONENT: MealPlan -->
+    <section id="meal-plan" class="py-20 bg-dark-bg hidden" data-page="meal-plan">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-12">
+                <h2 class="text-4xl font-black text-white">Today's Meal Plan</h2>
+                <button class="bg-primary-green px-6 py-3 rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center space-x-2" data-event="click:addMeal">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Meal</span>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- @MAP: meals.map(meal => ( -->
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-primary-green" data-mock="true">Breakfast</h3>
+                        <i class="fas fa-clock text-gray-500"></i>
+                    </div>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-gray-800 rounded-xl p-4">
+                            <h4 class="font-semibold text-white mb-2" data-mock="true">Protein Power Bowl</h4>
+                            <p class="text-sm text-gray-400" data-mock="true">450 cal • 35g protein</p>
+                        </div>
+                        
+                        <div class="bg-gray-800 rounded-xl p-4">
+                            <h4 class="font-semibold text-white mb-2" data-mock="true">Green Smoothie</h4>
+                            <p class="text-sm text-gray-400" data-mock="true">180 cal • 8g protein</p>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-transparent border border-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors" data-event="click:viewMealDetails">
+                        View Details
+                    </button>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-primary-green" data-mock="true">Lunch</h3>
+                        <i class="fas fa-clock text-gray-500"></i>
+                    </div>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-gray-800 rounded-xl p-4">
+                            <h4 class="font-semibold text-white mb-2" data-mock="true">Protein Power Bowl</h4>
+                            <p class="text-sm text-gray-400" data-mock="true">450 cal • 35g protein</p>
+                        </div>
+                        
+                        <div class="bg-gray-800 rounded-xl p-4">
+                            <h4 class="font-semibold text-white mb-2" data-mock="true">Green Smoothie</h4>
+                            <p class="text-sm text-gray-400" data-mock="true">180 cal • 8g protein</p>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-transparent border border-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors" data-event="click:viewMealDetails">
+                        View Details
+                    </button>
+                </div>
+                
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-primary-green" data-mock="true">Dinner</h3>
+                        <i class="fas fa-clock text-gray-500"></i>
+                    </div>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-gray-800 rounded-xl p-4">
+                            <h4 class="font-semibold text-white mb-2" data-mock="true">Protein Power Bowl</h4>
+                            <p class="text-sm text-gray-400" data-mock="true">450 cal • 35g protein</p>
+                        </div>
+                        
+                        <div class="bg-gray-800 rounded-xl p-4">
+                            <h4 class="font-semibold text-white mb-2" data-mock="true">Green Smoothie</h4>
+                            <p class="text-sm text-gray-400" data-mock="true">180 cal • 8g protein</p>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-transparent border border-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors" data-event="click:viewMealDetails">
+                        View Details
+                    </button>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: MealPlan -->
+
+    <!-- @COMPONENT: LogFood -->
+    <section id="log-food" class="py-20 bg-dark-bg hidden" data-page="log-food">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-black text-white mb-4">Log Food</h2>
+                <p class="text-xl text-gray-400">Track your nutrition and stay on target with your goals</p>
+            </div>
+            
+            <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                <form class="space-y-6" data-implementation="Should validate and submit to nutrition tracking system">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Food Name</label>
+                            <input type="text" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="e.g., Grilled Chicken Breast" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Serving Size</label>
+                            <input type="text" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="e.g., 100g" data-mock="true">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Calories</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="250" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Protein (g)</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="30" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Carbs (g)</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="5" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Fats (g)</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="8" data-mock="true">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Meal Type</label>
+                        <select class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" data-mock="true">
+                            <option>Breakfast</option>
+                            <option>Lunch</option>
+                            <option>Dinner</option>
+                            <option>Snack</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" class="px-6 py-3 border border-gray-700 rounded-xl text-gray-300 hover:bg-gray-800 transition-colors">Cancel</button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-primary-green to-blue-500 rounded-xl font-semibold hover:shadow-lg transition-all duration-200" data-event="click:handleSubmit">Log Food</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: LogFood -->
+
+    <!-- @COMPONENT: LogWorkout -->
+    <section id="log-workout" class="py-20 bg-dark-bg hidden" data-page="log-workout">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-black text-white mb-4">Log Workout</h2>
+                <p class="text-xl text-gray-400">Record your training sessions and track your fitness progress</p>
+            </div>
+            
+            <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                <form class="space-y-6" data-implementation="Should validate and submit to workout tracking system">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Workout Type</label>
+                            <select class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" data-mock="true">
+                                <option>Strength Training</option>
+                                <option>HIIT Workout</option>
+                                <option>Endurance</option>
+                                <option>Flexibility</option>
+                                <option>Sports</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Duration (minutes)</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" placeholder="45" data-mock="true">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Calories Burned</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" placeholder="400" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Intensity</label>
+                            <select class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" data-mock="true">
+                                <option>Low</option>
+                                <option>Moderate</option>
+                                <option>High</option>
+                                <option>Very High</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Exercise Details</label>
+                        <textarea class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent h-32" placeholder="Describe your workout routine, exercises performed, sets, reps, weights, etc." data-mock="true"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">How did you feel?</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="feeling" class="text-primary-blue focus:ring-primary-blue" data-mock="true">
+                                <span class="ml-2 text-gray-300">😫 Exhausted</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="feeling" class="text-primary-blue focus:ring-primary-blue" data-mock="true">
+                                <span class="ml-2 text-gray-300">😅 Tired</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="feeling" class="text-primary-blue focus:ring-primary-blue" data-mock="true">
+                                <span class="ml-2 text-gray-300">😊 Good</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="feeling" class="text-primary-blue focus:ring-primary-blue" data-mock="true">
+                                <span class="ml-2 text-gray-300">💪 Strong</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" class="px-6 py-3 border border-gray-700 rounded-xl text-gray-300 hover:bg-gray-800 transition-colors">Cancel</button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-primary-blue to-purple-500 rounded-xl font-semibold hover:shadow-lg transition-all duration-200" data-event="click:handleSubmit">Log Workout</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: LogWorkout -->
+
+    <!-- @COMPONENT: Settings -->
+    <section id="settings" class="py-20 bg-dark-bg hidden" data-page="settings">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-black text-white mb-4">Settings</h2>
+                <p class="text-xl text-gray-400">Customize your profile and fitness goals</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Profile Settings -->
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-white mb-6">Profile Information</h3>
+                    <form class="space-y-6" data-implementation="Should update user profile in database">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                            <input type="text" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="John Doe" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input type="email" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="john@example.com" data-mock="true">
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Age</label>
+                                <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" placeholder="28" data-mock="true">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Gender</label>
+                                <select class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-green focus:border-transparent" data-mock="true">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary-green to-blue-500 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-200" data-event="click:updateProfile">
+                            Update Profile
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Fitness Goals -->
+                <div class="bg-dark-card border border-gray-800 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-white mb-6">Fitness Goals</h3>
+                    <form class="space-y-6" data-implementation="Should update user fitness goals">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Current Weight (lbs)</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" placeholder="180" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Target Weight (lbs)</label>
+                            <input type="number" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" placeholder="165" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Primary Goal</label>
+                            <select class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" data-mock="true">
+                                <option>Weight Loss</option>
+                                <option>Muscle Gain</option>
+                                <option>Maintain Weight</option>
+                                <option>Improve Fitness</option>
+                                <option>Build Strength</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Activity Level</label>
+                            <select class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" data-mock="true">
+                                <option>Sedentary</option>
+                                <option>Lightly Active</option>
+                                <option>Moderately Active</option>
+                                <option>Very Active</option>
+                                <option>Extremely Active</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Weekly Workout Goal</label>
+                            <select class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary-blue focus:border-transparent" data-mock="true">
+                                <option>1-2 times per week</option>
+                                <option>3-4 times per week</option>
+                                <option>5-6 times per week</option>
+                                <option>Every day</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary-blue to-purple-500 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-200" data-event="click:updateGoals">
+                            Update Goals
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Settings -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-dark-card border-t border-gray-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-primary-blue to-primary-green rounded-xl flex items-center justify-center">
+                            <i class="fas fa-dumbbell text-white text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">FitPlan</span>
+                    </div>
+                    <p class="text-gray-400 max-w-md" data-mock="true">
+                        Transform your life with our AI-powered fitness and nutrition planner. 
+                        Track your progress, achieve your goals, and become the best version of yourself.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4" data-mock="true">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#dashboard" class="hover:text-white transition-colors" data-mock="true">Dashboard</a></li>
+                        <li><a href="#workout-categories" class="hover:text-white transition-colors" data-mock="true">Workouts</a></li>
+                        <li><a href="#nutrition-mastery" class="hover:text-white transition-colors" data-mock="true">Nutrition</a></li>
+                        <li><a href="#settings" class="hover:text-white transition-colors" data-mock="true">Settings</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4" data-mock="true">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-mock="true">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p data-mock="true">&copy; 2024 FitPlan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // Simple navigation system for demo purposes
+        (function() {
+            const sections = ['hero', 'workout-categories', 'nutrition-mastery', 'dashboard', 'meal-plan', 'log-food', 'log-workout', 'settings'];
+            let currentSection = 'hero';
+            
+            function showSection(sectionId) {
+                // Hide all sections
+                sections.forEach(id => {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        if (id === 'hero') {
+                            section.style.display = sectionId === 'hero' ? 'flex' : 'none';
+                        } else {
+                            section.classList.toggle('hidden', id !== sectionId);
+                        }
+                    }
+                });
+                currentSection = sectionId;
+            }
+            
+            // Navigation event handlers
+            document.addEventListener('click', function(e) {
+                const nav = e.target.getAttribute('data-nav');
+                if (nav) {
+                    e.preventDefault();
+                    let targetSection = nav;
+                    
+                    // Map navigation items to sections
+                    if (nav === 'dashboard') targetSection = 'dashboard';
+                    else if (nav === 'log-food') targetSection = 'log-food';
+                    else if (nav === 'log-workout') targetSection = 'log-workout';
+                    else if (nav === 'settings') targetSection = 'settings';
+                    
+                    showSection(targetSection);
+                }
+                
+                // Handle other interactive elements
+                const event = e.target.getAttribute('data-event');
+                if (event) {
+                    e.preventDefault();
+                    
+                    if (event === 'click:startJourney') {
+                        showSection('workout-categories');
+                    } else if (event === 'click:watchDemo') {
+                        showSection('dashboard');
+                    } else if (event === 'click:startWorkout') {
+                        showSection('log-workout');
+                    } else if (event === 'click:addMeal') {
+                        showSection('log-food');
+                    }
+                    // TODO: Implement other event handlers for form submissions and interactions
+                }
+            });
+            
+            // Auto-cycle through different sections for demo (optional)
+            // Uncomment to enable auto-demo mode
+            /*
+            let demoIndex = 0;
+            const demoSections = ['hero', 'workout-categories', 'nutrition-mastery', 'meal-plan', 'dashboard'];
+            setInterval(() => {
+                demoIndex = (demoIndex + 1) % demoSections.length;
+                showSection(demoSections[demoIndex]);
+            }, 10000);
+            */
+        })();
+        
+        // Form handling demos
+        document.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // TODO: Implement actual form submission logic
+            alert('Form submitted! (Demo mode - no actual data processing)');
+        });
+    </script>
+</body>
+</html>

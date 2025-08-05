@@ -1,0 +1,1005 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPlan - Transform Your Life</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    'inter': ['Inter', 'sans-serif'],
+                },
+                colors: {
+                    primary: {
+                        50: '#eef2ff',
+                        500: '#6366f1',
+                        600: '#5b21b6',
+                        700: '#4c1d95'
+                    }
+                }
+            }
+        }
+    };
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-hero {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .nav-link.active {
+            color: #6366f1;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- @COMPONENT: Navbar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            <span class="text-primary-500">Fit</span>Plan
+                        </h1>
+                    </div>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors" onclick="showPage('landing')">Home</a>
+                        <a href="#" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors" onclick="showPage('dashboard')">Dashboard</a>
+                        <a href="#" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors" onclick="showPage('log-food')">Log Food</a>
+                        <a href="#" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors" onclick="showPage('log-workout')">Log Workout</a>
+                        <a href="#" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors" onclick="showPage('settings')">Settings</a>
+                        <a href="#" class="text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Sign In</a>
+                        <a href="#" class="bg-primary-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">Get Started</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button class="text-gray-700 hover:text-primary-500 focus:outline-none focus:text-primary-500" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+                <a href="#" class="nav-link block px-3 py-2 text-gray-700 hover:text-primary-500 font-medium" onclick="showPage('landing')">Home</a>
+                <a href="#" class="nav-link block px-3 py-2 text-gray-700 hover:text-primary-500 font-medium" onclick="showPage('dashboard')">Dashboard</a>
+                <a href="#" class="nav-link block px-3 py-2 text-gray-700 hover:text-primary-500 font-medium" onclick="showPage('log-food')">Log Food</a>
+                <a href="#" class="nav-link block px-3 py-2 text-gray-700 hover:text-primary-500 font-medium" onclick="showPage('log-workout')">Log Workout</a>
+                <a href="#" class="nav-link block px-3 py-2 text-gray-700 hover:text-primary-500 font-medium" onclick="showPage('settings')">Settings</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-primary-500 font-medium">Sign In</a>
+                <a href="#" class="block px-3 py-2 bg-primary-500 text-white rounded-lg font-medium mx-3">Get Started</a>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navbar -->
+
+    <!-- @COMPONENT: Landing Page -->
+    <div id="landing-page" class="page active">
+        <!-- @COMPONENT: Hero Section -->
+        <section class="gradient-hero text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-center lg:text-left">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" data-mock="true">
+                            Transform Your Life
+                        </h1>
+                        <p class="text-xl md:text-2xl mb-8 text-purple-100" data-mock="true">
+                            Track your fitness journey, log meals, and achieve your health goals with our comprehensive wellness platform.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <button class="bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg" onclick="showPage('dashboard')">
+                                Start Your Journey
+                            </button>
+                            <button class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-purple-600 transition-colors">
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hidden lg:block">
+                        <!-- A fit woman doing yoga outdoors in a serene setting -->
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Woman doing yoga outdoors" class="rounded-2xl shadow-2xl w-full" />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: Hero Section -->
+
+        <!-- Features Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-mock="true">
+                        Everything You Need to Succeed
+                    </h2>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-mock="true">
+                        Comprehensive tools to track your fitness, nutrition, and wellness goals all in one place.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-6">
+                        <div class="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-dumbbell text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2" data-mock="true">Workout Tracking</h3>
+                        <p class="text-gray-600" data-mock="true">Log your workouts, track progress, and stay motivated with detailed analytics.</p>
+                    </div>
+                    
+                    <div class="text-center p-6">
+                        <div class="bg-gradient-to-r from-green-500 to-teal-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-apple-alt text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2" data-mock="true">Nutrition Logging</h3>
+                        <p class="text-gray-600" data-mock="true">Track your meals, calories, and macros to maintain a balanced diet.</p>
+                    </div>
+                    
+                    <div class="text-center p-6">
+                        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2" data-mock="true">Progress Analytics</h3>
+                        <p class="text-gray-600" data-mock="true">Visualize your progress with charts and insights to stay on track.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- @END_COMPONENT: Landing Page -->
+
+    <!-- @COMPONENT: Dashboard -->
+    <div id="dashboard-page" class="page">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2" data-bind="user.name">Welcome back, Alex!</h1>
+                <p class="text-gray-600" data-mock="true">Here's your fitness progress overview</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Current Weight</p>
+                            <p class="text-2xl font-bold text-gray-900" data-bind="user.currentWeight">165 lbs</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-weight text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Goal Weight</p>
+                            <p class="text-2xl font-bold text-gray-900" data-bind="user.goalWeight">155 lbs</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-bullseye text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">This Week</p>
+                            <p class="text-2xl font-bold text-gray-900" data-bind="stats.weeklyWorkouts">4 workouts</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-dumbbell text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Calories Today</p>
+                            <p class="text-2xl font-bold text-gray-900" data-bind="stats.dailyCalories">1,847</p>
+                        </div>
+                        <div class="bg-orange-100 p-3 rounded-full">
+                            <i class="fas fa-fire text-orange-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Weight Progress</h3>
+                    <canvas id="weightChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Weekly Activity</h3>
+                    <canvas id="activityChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+                <div class="space-y-4">
+                    <!-- @MAP: recentActivities.map(activity => ( -->
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-apple-alt text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Logged Breakfast</p>
+                                <p class="text-sm text-gray-600">Oatmeal with berries - 350 calories</p>
+                            </div>
+                        </div>
+                        <span class="text-sm text-gray-500">10 min ago</span>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-dumbbell text-purple-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Morning Workout</p>
+                                <p class="text-sm text-gray-600">45 min cardio - 420 calories burned</p>
+                            </div>
+                        </div>
+                        <span class="text-sm text-gray-500">2 hours ago</span>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-weight text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Weight Check-in</p>
+                                <p class="text-sm text-gray-600">164.5 lbs - Down 0.5 lbs</p>
+                            </div>
+                        </div>
+                        <span class="text-sm text-gray-500">1 day ago</span>
+                    </div>
+                    <!-- @END_MAP )) -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Dashboard -->
+
+    <!-- @COMPONENT: Log Food -->
+    <div id="log-food-page" class="page">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Log Food</h1>
+                <p class="text-gray-600">Track your meals and nutrition intake</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 md:p-8 card-shadow">
+                <form id="food-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="meal-name" class="block text-sm font-medium text-gray-700 mb-2">Meal Name</label>
+                            <input type="text" id="meal-name" name="meal-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., Chicken Salad" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label for="meal-type" class="block text-sm font-medium text-gray-700 mb-2">Meal Type</label>
+                            <select id="meal-type" name="meal-type" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Select meal type</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="snack">Snack</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="calories" class="block text-sm font-medium text-gray-700 mb-2">Calories</label>
+                            <input type="number" id="calories" name="calories" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="350" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label for="serving-size" class="block text-sm font-medium text-gray-700 mb-2">Serving Size</label>
+                            <input type="text" id="serving-size" name="serving-size" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="1 bowl" data-mock="true">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="protein" class="block text-sm font-medium text-gray-700 mb-2">Protein (g)</label>
+                            <input type="number" id="protein" name="protein" step="0.1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="25" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label for="carbs" class="block text-sm font-medium text-gray-700 mb-2">Carbs (g)</label>
+                            <input type="number" id="carbs" name="carbs" step="0.1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="15" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label for="fats" class="block text-sm font-medium text-gray-700 mb-2">Fats (g)</label>
+                            <input type="number" id="fats" name="fats" step="0.1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="12" data-mock="true">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>
+                        <textarea id="notes" name="notes" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Any additional notes about this meal..." data-mock="true"></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-colors">
+                            Log Food
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Recent Meals -->
+            <div class="mt-8 bg-white rounded-xl p-6 card-shadow">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Today's Meals</h3>
+                <div class="space-y-4">
+                    <!-- @MAP: todaysMeals.map(meal => ( -->
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-utensils text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Oatmeal with Berries</p>
+                                <p class="text-sm text-gray-600">Breakfast • 350 calories</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">P: 12g | C: 65g | F: 8g</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-utensils text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Grilled Chicken Salad</p>
+                                <p class="text-sm text-gray-600">Lunch • 420 calories</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">P: 35g | C: 15g | F: 18g</p>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Log Food -->
+
+    <!-- @COMPONENT: Log Workout -->
+    <div id="log-workout-page" class="page">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Log Workout</h1>
+                <p class="text-gray-600">Track your exercise and fitness activities</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 md:p-8 card-shadow">
+                <form id="workout-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="workout-type" class="block text-sm font-medium text-gray-700 mb-2">Workout Type</label>
+                            <select id="workout-type" name="workout-type" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Select workout type</option>
+                                <option value="cardio">Cardio</option>
+                                <option value="strength">Strength Training</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="pilates">Pilates</option>
+                                <option value="swimming">Swimming</option>
+                                <option value="cycling">Cycling</option>
+                                <option value="running">Running</option>
+                                <option value="walking">Walking</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="workout-name" class="block text-sm font-medium text-gray-700 mb-2">Exercise Name</label>
+                            <input type="text" id="workout-name" name="workout-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., Morning Run" data-mock="true">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="duration" class="block text-sm font-medium text-gray-700 mb-2">Duration (minutes)</label>
+                            <input type="number" id="duration" name="duration" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="45" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label for="calories-burned" class="block text-sm font-medium text-gray-700 mb-2">Calories Burned</label>
+                            <input type="number" id="calories-burned" name="calories-burned" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="320" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label for="intensity" class="block text-sm font-medium text-gray-700 mb-2">Intensity</label>
+                            <select id="intensity" name="intensity" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Select intensity</option>
+                                <option value="low">Low</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="high">High</option>
+                                <option value="very-high">Very High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="distance" class="block text-sm font-medium text-gray-700 mb-2">Distance (Optional)</label>
+                            <div class="flex">
+                                <input type="number" id="distance" name="distance" step="0.1" class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="3.5" data-mock="true">
+                                <select id="distance-unit" name="distance-unit" class="px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50">
+                                    <option value="miles">Miles</option>
+                                    <option value="km">Kilometers</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="workout-date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                            <input type="date" id="workout-date" name="workout-date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-mock="true">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="workout-notes" class="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>
+                        <textarea id="workout-notes" name="workout-notes" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="How did you feel? Any achievements or observations..." data-mock="true"></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-colors">
+                            Log Workout
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Recent Workouts -->
+            <div class="mt-8 bg-white rounded-xl p-6 card-shadow">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Workouts</h3>
+                <div class="space-y-4">
+                    <!-- @MAP: recentWorkouts.map(workout => ( -->
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-running text-purple-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Morning Run</p>
+                                <p class="text-sm text-gray-600">45 min • 420 calories • High intensity</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">3.2 miles</p>
+                            <p class="text-xs text-gray-500">Today</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-dumbbell text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Upper Body Strength</p>
+                                <p class="text-sm text-gray-600">60 min • 280 calories • Moderate intensity</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-500">Yesterday</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-mock="true">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-2 rounded-full mr-3">
+                                <i class="fas fa-leaf text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Yoga Flow</p>
+                                <p class="text-sm text-gray-600">30 min • 150 calories • Low intensity</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-500">2 days ago</p>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Log Workout -->
+
+    <!-- @COMPONENT: Settings -->
+    <div id="settings-page" class="page">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
+                <p class="text-gray-600">Manage your profile and fitness goals</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Profile Settings -->
+                <div class="bg-white rounded-xl p-6 md:p-8 card-shadow">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Profile Information</h2>
+                    <form class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input type="text" id="first-name" name="first-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="Alex" data-bind="user.firstName">
+                            </div>
+
+                            <div>
+                                <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input type="text" id="last-name" name="last-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="Johnson" data-bind="user.lastName">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="alex.johnson@email.com" data-bind="user.email">
+                            </div>
+
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="+1 (555) 123-4567" data-bind="user.phone">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="age" class="block text-sm font-medium text-gray-700 mb-2">Age</label>
+                                <input type="number" id="age" name="age" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="28" data-bind="user.age">
+                            </div>
+
+                            <div>
+                                <label for="height" class="block text-sm font-medium text-gray-700 mb-2">Height</label>
+                                <div class="flex">
+                                    <input type="text" id="height" name="height" class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="5'7&quot;" data-bind="user.height">
+                                    <select id="height-unit" name="height-unit" class="px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50">
+                                        <option value="ft">ft/in</option>
+                                        <option value="cm">cm</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                                <select id="gender" name="gender" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-bind="user.gender">
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-colors">
+                                Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Fitness Goals -->
+                <div class="bg-white rounded-xl p-6 md:p-8 card-shadow">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Fitness Goals</h2>
+                    <form class="space-y-6">
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="current-weight" class="block text-sm font-medium text-gray-700 mb-2">Current Weight</label>
+                                <div class="flex">
+                                    <input type="number" id="current-weight" name="current-weight" step="0.1" class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="165" data-bind="user.currentWeight">
+                                    <select id="weight-unit" name="weight-unit" class="px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50">
+                                        <option value="lbs">lbs</option>
+                                        <option value="kg">kg</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="goal-weight" class="block text-sm font-medium text-gray-700 mb-2">Goal Weight</label>
+                                <div class="flex">
+                                    <input type="number" id="goal-weight" name="goal-weight" step="0.1" class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="155" data-bind="user.goalWeight">
+                                    <select class="px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50">
+                                        <option value="lbs">lbs</option>
+                                        <option value="kg">kg</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="activity-level" class="block text-sm font-medium text-gray-700 mb-2">Activity Level</label>
+                                <select id="activity-level" name="activity-level" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-bind="user.activityLevel">
+                                    <option value="sedentary">Sedentary</option>
+                                    <option value="lightly-active">Lightly Active</option>
+                                    <option value="moderately-active" selected>Moderately Active</option>
+                                    <option value="very-active">Very Active</option>
+                                    <option value="extremely-active">Extremely Active</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="goal-type" class="block text-sm font-medium text-gray-700 mb-2">Primary Goal</label>
+                                <select id="goal-type" name="goal-type" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-bind="user.primaryGoal">
+                                    <option value="lose-weight" selected>Lose Weight</option>
+                                    <option value="gain-weight">Gain Weight</option>
+                                    <option value="maintain-weight">Maintain Weight</option>
+                                    <option value="build-muscle">Build Muscle</option>
+                                    <option value="improve-fitness">Improve Fitness</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="weekly-goal" class="block text-sm font-medium text-gray-700 mb-2">Weekly Weight Goal</label>
+                                <select id="weekly-goal" name="weekly-goal" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-bind="user.weeklyGoal">
+                                    <option value="0.5">Lose 0.5 lbs/week</option>
+                                    <option value="1" selected>Lose 1 lb/week</option>
+                                    <option value="1.5">Lose 1.5 lbs/week</option>
+                                    <option value="2">Lose 2 lbs/week</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="daily-calorie-goal" class="block text-sm font-medium text-gray-700 mb-2">Daily Calorie Goal</label>
+                            <input type="number" id="daily-calorie-goal" name="daily-calorie-goal" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="1800" data-bind="user.dailyCalorieGoal">
+                            <p class="text-sm text-gray-500 mt-1">Based on your profile and goals. You can adjust this manually.</p>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-colors">
+                                Update Goals
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Notifications -->
+                <div class="bg-white rounded-xl p-6 md:p-8 card-shadow">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Notifications</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-medium text-gray-900">Meal Reminders</h3>
+                                <p class="text-sm text-gray-600">Get reminded to log your meals</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-medium text-gray-900">Workout Reminders</h3>
+                                <p class="text-sm text-gray-600">Get reminded to exercise</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-medium text-gray-900">Progress Updates</h3>
+                                <p class="text-sm text-gray-600">Weekly progress summaries</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Actions -->
+                <div class="bg-white rounded-xl p-6 md:p-8 card-shadow">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Account</h2>
+                    <div class="space-y-4">
+                        <button class="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Export Data</h3>
+                                    <p class="text-sm text-gray-600">Download your fitness and nutrition data</p>
+                                </div>
+                                <i class="fas fa-download text-gray-400"></i>
+                            </div>
+                        </button>
+
+                        <button class="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Change Password</h3>
+                                    <p class="text-sm text-gray-600">Update your account password</p>
+                                </div>
+                                <i class="fas fa-key text-gray-400"></i>
+                            </div>
+                        </button>
+
+                        <button class="w-full text-left px-4 py-3 border border-red-300 rounded-lg hover:bg-red-50 transition-colors text-red-600">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-medium">Delete Account</h3>
+                                    <p class="text-sm text-red-500">Permanently delete your account and data</p>
+                                </div>
+                                <i class="fas fa-trash text-red-400"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Settings -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">
+                        <span class="text-purple-400">Fit</span>Plan
+                    </h3>
+                    <p class="text-gray-300 mb-4" data-mock="true">
+                        Transform your life with comprehensive fitness and nutrition tracking.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-purple-400 transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-purple-400 transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-purple-400 transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4" data-mock="true">Product</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Features</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Pricing</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Mobile App</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">API</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4" data-mock="true">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Help Center</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Community</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Status</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4" data-mock="true">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">About</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Careers</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors" data-mock="true">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400" data-mock="true">
+                    © 2024 FitPlan. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // Navigation and page management
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Update nav link active states
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            // Hide mobile menu
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.add('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Form handling with mock functionality
+        (function() {
+            // Food form submission
+            const foodForm = document.getElementById('food-form');
+            if (foodForm) {
+                foodForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // TODO: Implement food logging API call
+                    alert('Food logged successfully! (Mock implementation)');
+                    foodForm.reset();
+                });
+            }
+
+            // Workout form submission
+            const workoutForm = document.getElementById('workout-form');
+            if (workoutForm) {
+                workoutForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // TODO: Implement workout logging API call
+                    alert('Workout logged successfully! (Mock implementation)');
+                    workoutForm.reset();
+                });
+            }
+
+            // Set current date for workout form
+            const workoutDateInput = document.getElementById('workout-date');
+            if (workoutDateInput) {
+                workoutDateInput.value = new Date().toISOString().split('T')[0];
+            }
+        })();
+
+        // Chart.js initialization
+        (function() {
+            // Weight Progress Chart
+            const weightCtx = document.getElementById('weightChart');
+            if (weightCtx) {
+                new Chart(weightCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Weight (lbs)',
+                            data: [172, 170, 168, 166, 165, 164],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 160,
+                                max: 175
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Activity Chart
+            const activityCtx = document.getElementById('activityChart');
+            if (activityCtx) {
+                new Chart(activityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Calories Burned',
+                            data: [420, 0, 380, 450, 0, 520, 300],
+                            backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        })();
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up initial state
+            showPage('landing');
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
