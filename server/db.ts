@@ -9,6 +9,7 @@ neonConfig.webSocketConstructor = ws;
 // Temporary fallback for development
 const getDatabaseUrl = () => {
   if (process.env.DATABASE_URL) {
+    console.log("✅ Using DATABASE_URL from environment variables");
     return process.env.DATABASE_URL;
   }
   
@@ -18,6 +19,17 @@ const getDatabaseUrl = () => {
 };
 
 const connectionString = getDatabaseUrl();
+console.log("🔗 Database connection string:", connectionString.replace(/:[^:@]*@/, ':****@')); // Hide password in logs
 
 export const pool = new Pool({ connectionString });
+
+// Test the connection
+pool.on('connect', () => {
+  console.log("✅ Database connected successfully!");
+});
+
+pool.on('error', (err) => {
+  console.error("❌ Database connection error:", err);
+});
+
 export const db = drizzle({ client: pool, schema });
