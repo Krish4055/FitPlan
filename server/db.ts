@@ -1,35 +1,27 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
+import Database from 'better-sqlite3';
 import "dotenv/config";
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
+import { drizzle } from 'drizzle-orm/better-sqlite3';
 import * as schema from "@shared/schema";
 
-neonConfig.webSocketConstructor = ws;
-
-// Temporary fallback for development
-const getDatabaseUrl = () => {
-  if (process.env.DATABASE_URL) {
-    console.log("✅ Using DATABASE_URL from environment variables");
-    return process.env.DATABASE_URL;
+// Use SQLite for development
+const getDatabasePath = () => {
+  if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('sqlite:')) {
+    const path = process.env.DATABASE_URL.replace('sqlite:', '');
+    console.log("✅ Using SQLite database from DATABASE_URL:", path);
+    return path;
   }
   
-  // Fallback for development - you can replace this with your Supabase URL
-  console.log("⚠️  No DATABASE_URL found. Using fallback connection.");
-  return "postgresql://postgres:ganjinsdqqqoxtwtwlwm@db.ganjinsdqqqoxtwtwlwm.supabase.co:5432/postgres";
+  // Fallback for development
+  console.log("✅ Using fallback SQLite database: fitplan.db");
+  return "fitplan.db";
 };
 
-const connectionString = getDatabaseUrl();
-console.log("🔗 Database connection string:", connectionString.replace(/:[^:@]*@/, ':****@')); // Hide password in logs
+const databasePath = getDatabasePath();
+console.log("🔗 Database path:", databasePath);
 
-export const pool = new Pool({ connectionString });
+const sqlite = new Database(databasePath);
+sqlite.pragma('journal_mode = WAL');
 
-// Test the connection
-pool.on('connect', () => {
-  console.log("✅ Database connected successfully!");
-});
+console.log("✅ SQLite database connected successfully!");
 
-pool.on('error', (err) => {
-  console.error("❌ Database connection error:", err);
-});
-
-export const db = drizzle({ client: pool, schema });
+export const db = drizzle({ client: sqlite, schema });
