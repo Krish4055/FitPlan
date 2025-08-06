@@ -10,8 +10,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/register", async (req, res) => {
     try {
       console.log("📝 Registration attempt:", { username: req.body.username, email: req.body.email });
+      console.log("📝 Full request body:", req.body);
       
       const { password, ...userData } = insertUserSchema.parse(req.body);
+      console.log("📝 Parsed user data:", userData);
       
       // Check if user already exists
       const existingUser = await storage.getUserByUsername(userData.username) || 
@@ -22,6 +24,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const hashedPassword = await hashPassword(password);
+      console.log("🔒 Password hashed successfully");
+      
       const user = await storage.createUser({ ...userData, password: hashedPassword });
       
       console.log("✅ User created successfully:", user.username);
@@ -34,9 +38,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(userWithoutPassword);
     } catch (error) {
       console.error("❌ Registration error:", error);
+      console.error("❌ Error details:", {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       res.status(400).json({ 
         message: error instanceof Error ? error.message : "Registration failed",
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === 'development' ? {
+          error: error.message,
+          stack: error.stack
+        } : undefined
       });
     }
   });
