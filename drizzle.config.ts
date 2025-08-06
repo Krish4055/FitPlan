@@ -7,8 +7,8 @@ dotenv.config();
 export default defineConfig({
   out: "./migrations",
   schema: "./shared/schema.ts",
-  dialect: "sqlite",
+  dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL?.replace('sqlite:', '') || "fitplan.db",
+    url: process.env.DATABASE_URL || "postgresql://postgres:password@localhost:5432/fitplan",
   },
 });
