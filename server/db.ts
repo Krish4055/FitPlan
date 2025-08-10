@@ -23,7 +23,12 @@ async function initPostgresInternal() {
   console.log('✅ Using PostgreSQL database');
   console.log('🔗 Database connection string:', databaseUrl.replace(/:[^:@]*@/, ':****@'));
 
-  const createdPool = new PgPool({ connectionString: databaseUrl });
+  // Enable SSL for hosted providers like Supabase/Render
+  const shouldUseSsl = /supabase\.co|render|neon/.test(databaseUrl);
+  const createdPool = new PgPool({
+    connectionString: databaseUrl,
+    ssl: shouldUseSsl ? { rejectUnauthorized: false } : undefined,
+  });
   createdPool.on('connect', () => {
     console.log('✅ Database connected successfully!');
   });
