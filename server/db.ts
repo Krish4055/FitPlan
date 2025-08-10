@@ -1,35 +1,58 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import "dotenv/config";
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
-import * as schema from "@shared/schema";
+import 'dotenv/config';
+import * as schema from '@shared/schema';
 
-neonConfig.webSocketConstructor = ws;
+const databaseUrl = process.env.DATABASE_URL || 'sqlite:fitplan.db';
 
-// Temporary fallback for development
-const getDatabaseUrl = () => {
-  if (process.env.DATABASE_URL) {
-    console.log("✅ Using DATABASE_URL from environment variables");
-    return process.env.DATABASE_URL;
+export type DatabaseKind = 'postgres' | 'sqlite';
+export const databaseKind: DatabaseKind = databaseUrl.startsWith('sqlite:')
+  ? 'sqlite'
+  : 'postgres';
+
+export let db: any;
+export let pool: import('pg').Pool | undefined;
+
+async function initPostgres() {
+  // Dynamic import to avoid requiring pg in sqlite-only environments
+  const pgModule: any = await import('pg');
+  const PgPool = pgModule.Pool || (pgModule.default && pgModule.default.Pool);
+  if (!PgPool) {
+    throw new Error('Failed to load pg.Pool');
   }
-  
-  // Fallback for development - you can replace this with your Supabase URL
-  console.log("⚠️  No DATABASE_URL found. Using fallback connection.");
-  return "postgresql://postgres:ganjinsdqqqoxtwtwlwm@db.ganjinsdqqqoxtwtwlwm.supabase.co:5432/postgres";
-};
 
-const connectionString = getDatabaseUrl();
-console.log("🔗 Database connection string:", connectionString.replace(/:[^:@]*@/, ':****@')); // Hide password in logs
+  const { drizzle } = await import('drizzle-orm/node-postgres');
 
-export const pool = new Pool({ connectionString });
+  console.log('✅ Using PostgreSQL database');
+  console.log('🔗 Database connection string:', databaseUrl.replace(/:[^:@]*@/, ':****@'));
 
-// Test the connection
-pool.on('connect', () => {
-  console.log("✅ Database connected successfully!");
-});
+  const createdPool = new PgPool({ connectionString: databaseUrl });
+  createdPool.on('connect', () => {
+    console.log('✅ Database connected successfully!');
+  });
+  createdPool.on('error', (err: any) => {
+    console.error('❌ Database connection error:', err);
+  });
 
-pool.on('error', (err) => {
-  console.error("❌ Database connection error:", err);
-});
+  pool = createdPool;
+  db = drizzle(createdPool, { schema });
+}
 
-export const db = drizzle({ client: pool, schema });
+async function initSqlite() {
+  const { drizzle } = await import('drizzle-orm/better-sqlite3');
+  const Database = (await import('better-sqlite3')).default;
+
+  const sqlitePath = databaseUrl.replace('sqlite:', '');
+  console.log('✅ Using SQLite database at', sqlitePath);
+  const sqlite = new Database(sqlitePath);
+  db = drizzle(sqlite, { schema });
+}
+
+try {
+  if (databaseKind === 'postgres') {
+    await initPostgres();
+  } else {
+    await initSqlite();
+  }
+} catch (err) {
+  console.warn('⚠️  Falling back to SQLite due to Postgres init failure:', (err as Error).message);
+  await initSqlite();
+}

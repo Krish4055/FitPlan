@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { pool, databaseKind } from './db';
 
 declare module 'express-session' {
   interface SessionData {
@@ -13,14 +14,28 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// In production behind a proxy (e.g., Render), trust proxy so secure cookies work
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // Session configuration
+let sessionStore: session.Store | undefined;
+if (databaseKind === 'postgres' && pool) {
+  const connectPgSimple = (await import('connect-pg-simple')).default;
+  const PgSession = connectPgSimple(session);
+  sessionStore = new PgSession({ pool, createTableIfMissing: true });
+}
+
 app.use(session({
+  store: sessionStore,
   secret: process.env.SESSION_SECRET || 'fitplan-dev-secret-key-2024',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // Set to true in production with HTTPS
+    secure: app.get('env') === 'production',
     httpOnly: true,
+    sameSite: app.get('env') === 'production' ? 'lax' : 'lax',
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -72,20 +87,16 @@ app.use((req, res, next) => {
       res.status(status).json({ message });
     });
 
-    // importantly only setup vite in development and after
-    // setting up all the other routes so the catch-all route
-    // doesn't interfere with the other routes
     if (app.get("env") === "development") {
       await setupVite(app, server);
     } else {
       serveStatic(app);
     }
 
-    // Railway will provide the PORT environment variable
     const port = parseInt(process.env.PORT || '5000', 10);
     server.listen({
     port,
-    host: "0.0.0.0", // Railway needs 0.0.0.0 to accept external connections
+    host: "0.0.0.0",
   }, () => {
     log(`🚀 FitPlan server running on port ${port}`);
     log(`📍 Health check: http://localhost:${port}/health`);
