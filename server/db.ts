@@ -11,8 +11,7 @@ export const databaseKind: DatabaseKind = databaseUrl.startsWith('sqlite:')
 export let db: any;
 export let pool: import('pg').Pool | undefined;
 
-async function initPostgres() {
-  // Dynamic import to avoid requiring pg in sqlite-only environments
+async function initPostgresInternal() {
   const pgModule: any = await import('pg');
   const PgPool = pgModule.Pool || (pgModule.default && pgModule.default.Pool);
   if (!PgPool) {
@@ -32,11 +31,66 @@ async function initPostgres() {
     console.error('❌ Database connection error:', err);
   });
 
+  // Create tables if they do not exist (safe boot-time DDL)
+  await createdPool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id varchar(64) PRIMARY KEY,
+      username text NOT NULL UNIQUE,
+      email text NOT NULL UNIQUE,
+      password text NOT NULL,
+      full_name text,
+      age integer,
+      gender text,
+      current_weight numeric(5,2),
+      target_weight numeric(5,2),
+      primary_goal text,
+      activity_level text,
+      weekly_workout_goal text,
+      created_at timestamptz DEFAULT now()
+    );
+  `);
+  await createdPool.query(`
+    CREATE TABLE IF NOT EXISTS workouts (
+      id varchar(64) PRIMARY KEY,
+      user_id varchar(64) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      workout_type text NOT NULL,
+      duration integer NOT NULL,
+      calories_burned integer,
+      intensity text,
+      exercise_details text,
+      feeling text,
+      created_at timestamptz DEFAULT now()
+    );
+  `);
+  await createdPool.query(`
+    CREATE TABLE IF NOT EXISTS food_logs (
+      id varchar(64) PRIMARY KEY,
+      user_id varchar(64) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      food_name text NOT NULL,
+      serving_size text,
+      calories integer NOT NULL,
+      protein numeric(5,2),
+      carbs numeric(5,2),
+      fats numeric(5,2),
+      meal_type text NOT NULL,
+      created_at timestamptz DEFAULT now()
+    );
+  `);
+  await createdPool.query(`
+    CREATE TABLE IF NOT EXISTS weight_entries (
+      id varchar(64) PRIMARY KEY,
+      user_id varchar(64) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      weight numeric(5,2) NOT NULL,
+      notes text,
+      created_at timestamptz DEFAULT now()
+    );
+  `);
+
   pool = createdPool;
   db = drizzle(createdPool, { schema });
 }
 
-async function initSqlite() {
+async function initSqliteInternal() {
   const { drizzle } = await import('drizzle-orm/better-sqlite3');
   const Database = (await import('better-sqlite3')).default;
 
@@ -48,7 +102,7 @@ async function initSqlite() {
   sqlite.exec(`
     PRAGMA foreign_keys = ON;
     CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      id TEXT PRIMARY KEY,
       username TEXT NOT NULL UNIQUE,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
@@ -64,7 +118,7 @@ async function initSqlite() {
     );
 
     CREATE TABLE IF NOT EXISTS workouts (
-      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
       workout_type TEXT NOT NULL,
       duration INTEGER NOT NULL,
@@ -77,7 +131,7 @@ async function initSqlite() {
     );
 
     CREATE TABLE IF NOT EXISTS food_logs (
-      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
       food_name TEXT NOT NULL,
       serving_size TEXT,
@@ -91,7 +145,7 @@ async function initSqlite() {
     );
 
     CREATE TABLE IF NOT EXISTS weight_entries (
-      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
       weight REAL NOT NULL,
       notes TEXT,
@@ -107,13 +161,15 @@ async function initSqlite() {
   db = drizzle(sqlite, { schema });
 }
 
-try {
-  if (databaseKind === 'postgres') {
-    await initPostgres();
-  } else {
-    await initSqlite();
+export async function initializeDatabase() {
+  try {
+    if (databaseKind === 'postgres') {
+      await initPostgresInternal();
+    } else {
+      await initSqliteInternal();
+    }
+  } catch (err) {
+    console.warn('⚠️  Falling back to SQLite due to Postgres init failure:', (err as Error).message);
+    await initSqliteInternal();
   }
-} catch (err) {
-  console.warn('⚠️  Falling back to SQLite due to Postgres init failure:', (err as Error).message);
-  await initSqlite();
 }

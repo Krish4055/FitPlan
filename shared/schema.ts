@@ -4,7 +4,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey(),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
@@ -20,7 +20,7 @@ export const users = pgTable("users", {
 });
 
 export const workouts = pgTable("workouts", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   workoutType: text("workout_type").notNull(),
   duration: integer("duration").notNull(), // minutes
@@ -32,7 +32,7 @@ export const workouts = pgTable("workouts", {
 });
 
 export const foodLogs = pgTable("food_logs", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   foodName: text("food_name").notNull(),
   servingSize: text("serving_size"),
@@ -45,7 +45,7 @@ export const foodLogs = pgTable("food_logs", {
 });
 
 export const weightEntries = pgTable("weight_entries", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   weight: decimal("weight", { precision: 5, scale: 2 }).notNull(),
   notes: text("notes"),

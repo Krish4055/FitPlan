@@ -2,7 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { pool, databaseKind } from './db';
+import { pool, databaseKind, initializeDatabase } from './db';
 
 declare module 'express-session' {
   interface SessionData {
@@ -77,6 +77,7 @@ app.use((req, res, next) => {
 
 (async () => {
   try {
+    await initializeDatabase();
     const server = await registerRoutes(app);
 
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

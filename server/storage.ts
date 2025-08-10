@@ -1,6 +1,7 @@
 import { users, workouts, foodLogs, weightEntries, type User, type InsertUser, type Workout, type InsertWorkout, type FoodLog, type InsertFoodLog, type WeightEntry, type InsertWeightEntry } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lt, desc } from "drizzle-orm";
+import { randomUUID } from "crypto";
 
 export interface IStorage {
   // User operations
@@ -47,7 +48,7 @@ export class DatabaseStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
-      .values(insertUser)
+      .values({ ...(insertUser as any), id: randomUUID() })
       .returning();
     return user;
   }
@@ -77,7 +78,7 @@ export class DatabaseStorage implements IStorage {
   async createWorkout(insertWorkout: InsertWorkout): Promise<Workout> {
     const [workout] = await db
       .insert(workouts)
-      .values(insertWorkout)
+      .values({ ...(insertWorkout as any), id: randomUUID() })
       .returning();
     return workout;
   }
@@ -115,7 +116,7 @@ export class DatabaseStorage implements IStorage {
   async createFoodLog(insertFoodLog: InsertFoodLog): Promise<FoodLog> {
     const [foodLog] = await db
       .insert(foodLogs)
-      .values(insertFoodLog)
+      .values({ ...(insertFoodLog as any), id: randomUUID() })
       .returning();
     return foodLog;
   }
@@ -136,7 +137,7 @@ export class DatabaseStorage implements IStorage {
   async createWeightEntry(insertWeightEntry: InsertWeightEntry): Promise<WeightEntry> {
     const [weightEntry] = await db
       .insert(weightEntries)
-      .values(insertWeightEntry)
+      .values({ ...(insertWeightEntry as any), id: randomUUID() })
       .returning();
     return weightEntry;
   }
