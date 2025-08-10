@@ -43,6 +43,67 @@ async function initSqlite() {
   const sqlitePath = databaseUrl.replace('sqlite:', '');
   console.log('✅ Using SQLite database at', sqlitePath);
   const sqlite = new Database(sqlitePath);
+
+  // Ensure required tables exist (SQLite DDL)
+  sqlite.exec(`
+    PRAGMA foreign_keys = ON;
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      username TEXT NOT NULL UNIQUE,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      full_name TEXT,
+      age INTEGER,
+      gender TEXT,
+      current_weight REAL,
+      target_weight REAL,
+      primary_goal TEXT,
+      activity_level TEXT,
+      weekly_workout_goal TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS workouts (
+      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      user_id TEXT NOT NULL,
+      workout_type TEXT NOT NULL,
+      duration INTEGER NOT NULL,
+      calories_burned INTEGER,
+      intensity TEXT,
+      exercise_details TEXT,
+      feeling TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS food_logs (
+      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      user_id TEXT NOT NULL,
+      food_name TEXT NOT NULL,
+      serving_size TEXT,
+      calories INTEGER NOT NULL,
+      protein REAL,
+      carbs REAL,
+      fats REAL,
+      meal_type TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS weight_entries (
+      id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+      user_id TEXT NOT NULL,
+      weight REAL NOT NULL,
+      notes TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_workouts_user ON workouts(user_id);
+    CREATE INDEX IF NOT EXISTS idx_food_logs_user ON food_logs(user_id);
+    CREATE INDEX IF NOT EXISTS idx_weight_entries_user ON weight_entries(user_id);
+  `);
+
   db = drizzle(sqlite, { schema });
 }
 
