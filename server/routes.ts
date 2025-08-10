@@ -34,9 +34,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(userWithoutPassword);
     } catch (error) {
       console.error("❌ Registration error:", error);
-      res.status(400).json({ 
-        message: error instanceof Error ? error.message : "Registration failed",
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+      const message = error instanceof Error ? error.message : "Registration failed";
+      // Try to hint for unique constraint
+      if (typeof (error as any)?.code === '23505') {
+        return res.status(400).json({ message: "User already exists" });
+      }
+      return res.status(400).json({ 
+        message,
+        details: process.env.NODE_ENV !== 'production' ? String(error) : undefined
       });
     }
   });
