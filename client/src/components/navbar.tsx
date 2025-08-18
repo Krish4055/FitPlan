@@ -1,13 +1,12 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Dumbbell, LogOut, User } from "lucide-react";
-import { useAuth, useLogout } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Navbar() {
   const [location] = useLocation();
   const { user } = useAuth();
-  const logout = useLogout();
   const { toast } = useToast();
 
   const navItems = [
@@ -18,18 +17,13 @@ export default function Navbar() {
   ];
 
   const handleLogout = async () => {
+    // No-op or optional: you can still hit /api/auth/logout if desired
     try {
-      await logout.mutateAsync();
-      toast({
-        title: "Logged out successfully",
-        description: "See you next time!",
-      });
-    } catch (error) {
-      toast({
-        title: "Logout failed",
-        description: "Please try again",
-        variant: "destructive",
-      });
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      toast({ title: 'Logged out successfully', description: 'See you next time!' });
+      window.location.href = '/';
+    } catch {
+      toast({ title: 'Logout failed', description: 'Please try again', variant: 'destructive' });
     }
   };
 
@@ -73,10 +67,10 @@ export default function Navbar() {
                 variant="outline"
                 size="sm"
                 className="border-gray-600 text-gray-300 hover:text-white hover:border-gray-500"
-                disabled={logout.isPending}
+                
               >
                 <LogOut className="w-4 h-4 mr-2" />
-                {logout.isPending ? 'Logging out...' : 'Logout'}
+                Logout
               </Button>
             </div>
           </div>
