@@ -1,7 +1,9 @@
 import express, { type Request, Response, NextFunction } from "express";
-import session from "express-session";
+import session, { type SessionOptions } from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import connectPgSimple from "connect-pg-simple";
+import { pool } from "./db";
 
 declare module 'express-session' {
   interface SessionData {
@@ -13,17 +15,34 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// In production behind a proxy (Render/Railway), enable trust proxy so secure cookies work
+if (app.get("env") === "production") {
+  app.set("trust proxy", 1);
+}
+
 // Session configuration
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'fitplan-dev-secret-key-2024',
+const PgSessionStore = connectPgSimple(session);
+const sessionOptions: SessionOptions = {
+  secret: process.env.SESSION_SECRET || "fitplan-dev-secret-key-2024",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // Set to true in production with HTTPS
+    secure: app.get("env") === "production",
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60 * 1000,
+  },
+};
+
+// Use Postgres-backed session store when a DATABASE_URL is configured
+if (process.env.DATABASE_URL) {
+  sessionOptions.store = new PgSessionStore({
+    pool,
+    createTableIfMissing: true,
+  });
+}
+
+app.use(session(sessionOptions));
 
 // Add a simple health check endpoint
 app.get('/health', (req, res) => {
