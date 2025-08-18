@@ -76,13 +76,14 @@ export default function Dashboard() {
 
   const addWeightMutation = useMutation({
     mutationFn: async (data: { weight: string; notes?: string }) => {
-      return await apiRequest("/api/weight-entries", {
-        method: "POST",
-        body: JSON.stringify({
+      return await apiRequest(
+        "POST",
+        "/api/weight-entries",
+        {
           weight: data.weight,
           notes: data.notes || null,
-        }),
-      });
+        },
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/weight-entries"] });

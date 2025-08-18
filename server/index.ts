@@ -4,6 +4,9 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import connectPgSimple from "connect-pg-simple";
 import { pool } from "./db";
+import { storage } from "./storage";
+import { hashPassword } from "./auth";
+import { nanoid } from "nanoid";
 
 declare module 'express-session' {
   interface SessionData {
@@ -43,6 +46,28 @@ if (process.env.DATABASE_URL) {
 }
 
 app.use(session(sessionOptions));
+
+// Auto-guest middleware: automatically create/assign a guest session for API routes
+app.use(async (req, _res, next) => {
+  try {
+    if (!req.session.userId && req.path.startsWith("/api")) {
+      const guestIdSuffix = nanoid(8);
+      const guestUsername = `guest_${guestIdSuffix}`;
+      const guestEmail = `${guestUsername}@guest.local`;
+      const guestPasswordHash = await hashPassword("guest123");
+      const guestUser = await storage.createUser({
+        username: guestUsername,
+        email: guestEmail,
+        password: guestPasswordHash,
+        fullName: "Guest User",
+      });
+      req.session.userId = guestUser.id;
+    }
+  } catch (_err) {
+    // If guest creation fails, continue without blocking the request
+  }
+  next();
+});
 
 // Add a simple health check endpoint
 app.get('/health', (req, res) => {
